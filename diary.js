@@ -5,37 +5,17 @@ $(function() {
 })
 
 $("#topDifferences .hideTop").hide()
-var timeOfDayDictionary = {
-    "earlyMorning":1,
-    "Morning":2,
-    "Afternoon":3,
-    "Night":4
-}
-var mediaDictionary = {
-    "sound":1,
-    "web":2,
-    "image_sound":3,
-    "image":4,
-    "paper":5
-}
-var categoryDictionary = {
-    "fun":5,
-    "multi":3,
-    "dissertation":0,
-    "work":1
-}
-var colorScale = d3.scale.linear().domain([0,5]).range(["black","green"])
+
 function dataDidLoad(error,data) {
 //make 1 svg for everything
     var svg = d3.select("#chart").append("svg").attr("width",600).attr("height",400)
     var headers = d3.keys(data[0])
-    initGraph(data,"day",svg)
-    
     for(var k in headers){
         addButton(headers[k],data,svg)
     }
     
-   // initGraph(data,"time",svg)
+    initGraph(data,initialViewColumn,svg)
+    d3.select("."+initialViewColumn).attr("fill","red")
 }
 var table = {
 	group: function(rows, fields) {
@@ -103,14 +83,17 @@ var table = {
 		return data
 	}
 }
+var leftMargin = 200
+var lineHeight = 20
+var lineGap = 30
 
 function addButton(column,data,svg){
     var width = column.length*10
-    var controlsSvg =  d3.select("#buttons").append("svg").attr("width",width).attr("height",20)
-    controlsSvg.append("text").text(column).attr("fill","#aaa").attr("x",0).attr("y",15).attr("class","button")
+    var controlsSvg =  d3.select("#buttons").append("svg").attr("width",90).attr("height",20)
+    controlsSvg.append("text").text(column).attr("fill","#aaa").attr("x",0).attr("y",15).attr("class","button").attr("class",column)
     .on("click",function(){
         initGraph(data,column,svg)
-        d3.selectAll(".button").attr("fill","#aaa")
+        d3.selectAll("#buttons text").attr("fill","#aaa")
         d3.select(this).attr("fill","red")
         update(data,column,svg)
     })
@@ -119,7 +102,7 @@ function addButton(column,data,svg){
 function initGraph(data,column,svg){
 
     var formatedData = formatData(data,column,svg)
-    drawLine(formatedData,svg)
+    drawLine(formatedData,svg,column)
    
 }
 
@@ -129,19 +112,24 @@ function update(data,column,svg){
     .duration(500).delay(function(d,i){return i*50})
     .attr("x1",function(d,i){
         //console.log(d)
-        return 10*d.itemIndex+30
+        return 10*d.itemIndex+leftMargin
     })
     .attr("y1",function(d){
-        return d.groupIndex*25
+        return d.groupIndex*lineGap
     })
     .attr("x2",function(d,i){
-        var category = d.category
-        return 10*d.itemIndex+30-categoryDictionary[category]
+        //console.log(d[keyColumn])
+        return 10*d.itemIndex+leftMargin-slantScale(d[keyColumn])
     })
     .attr("y2",function(d){
-        return d.groupIndex*25+20
+        return d.groupIndex*lineGap+lineHeight
     })
-    drawLine(formatedData,svg)
+    .attr("stroke",function(d){
+        var colorIndex = d[keyColumn]
+        return colorScale(colorIndex)
+    })
+    d3.selectAll("#chart text").remove()
+    drawLine(formatedData,svg,column)
 }
 
 function formatData(data,column,svg){
@@ -175,33 +163,31 @@ function formatData(data,column,svg){
 var mediaDictionary = {
     "web":1
 }
-function drawLine(data,svg){
-    console.log(data)
+function drawLine(data,svg,column){
+  //  console.log(data)
     
   //  var lineSvg = d3.select("#chart").append("svg").attr("width",10).attr("height",20)
     svg.selectAll(".line")
     .data(data).enter()
     .append("line")
     .attr("class", "line")
-    .attr("stroke-width","4px")
+    .attr("stroke-width","3px")
     .attr("x1",function(d,i){
         //console.log(d)
-        return 10*d.itemIndex+30
+        return 10*d.itemIndex+leftMargin
     })
     .attr("y1",function(d){
-        return d.groupIndex*25
+        return d.groupIndex*lineGap
     })
-    .attr("x2",function(d,i){
-        var category = d.category
-        
-        return 10*d.itemIndex+30-categoryDictionary[category]
+    .attr("x2",function(d,i){   
+    //    console.log(d[keyColumn])
+        return 10*d.itemIndex+leftMargin-slantScale(d[keyColumn])
     })
     .attr("y2",function(d){
-        return d.groupIndex*25+20
+        return d.groupIndex*lineGap+lineHeight
     })
     .attr("stroke",function(d){
-        var category = d.category
-        var colorIndex = categoryDictionary[category]
+        var colorIndex = d[keyColumn]
         return colorScale(colorIndex)
     })
     .on("mouseover",function(d){
@@ -215,38 +201,14 @@ function drawLine(data,svg){
     //.transition().duration(750).delay(function(d,i){return i*50})
    // .attr("transform", function(d, i) { return "translate(0," + 20 + ")"; });
     
-    svg.selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-}
-function drawDots(data,svg){    
-    svg.selectAll(".dots")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class","dots")
-        .attr("r",function(d){
-           // return 7
-            return parseInt(d.amount)*0.2+3
-        })
-        .attr("cy",function(d){
-          console.log(d.day)
-            return d.day*60+20
-        })
-        .attr("cx",function(d,i){
-            
-           // return i*15
-            return d.time*15
-            return timeOfDayDictionary[d.timeOfDay]*40+40
-        })
-        .attr("fill",function(d){
-            return colorScale(categoryDictionary[d.category])
-        })
-	    .style("opacity",.3)
-        //on mouseover prints dot data
-        .on("mouseover",function(d){
-            console.log(d.description)
-        })
-        
+   for(var i in data){
+       if(data[i].itemIndex == 1){
+         //  console.log(data[i][column])
+           d3.select("#chart svg").append("text").text(data[i][column])
+           .attr("y",data[i].groupIndex*lineGap+10)
+           .attr("x",data[i].itemIndex+leftMargin-10)
+           .attr("text-anchor","end")
+       }
+   }
+
 }
