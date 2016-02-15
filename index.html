@@ -29,7 +29,11 @@
 <div id = "notes"></div>
 
 <script type="text/javascript" charset="utf-8">
-  var data = "formated_data_1.csv"	
+  var data = "data.csv"	
+  var keyColumn = "productivity"
+  var colorScale = d3.scale.linear().domain([0,5]).range(["black","green"])
+  var slantScale = d3.scale.linear().domain([0,5]).range([5,0])
+  var initialViewColumn = "day"
 </script>
 	
 <script src="diary.js"></script>
