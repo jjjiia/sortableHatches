@@ -8,35 +8,55 @@
 	<script src="static/javascripts/topojson.v1.min.js"></script>
 	<script src="static/javascripts/jquery.min.js"></script>
 	<script src="static/javascripts/d3.tip.v0.6.3.js"></script>
-    <script src="static/javascripts/queue.v1.min.js"></script>
+    <script src="static/javascripts/queue.js"></script>
 	<script src="static/javascripts/jquery-ui.min.js"></script>
+	<script src="Google-SpreadSheet-to-D3-Dataframe-master/data.js"></script>
 	<link rel="stylesheet" href="static/stylesheets/jquery-ui.css" />
 	<link rel="stylesheet" href="static/bootstrap-3.1.1-dist/css/bootstrap.min.css">
 	<script src="static/javascripts/jquery-ui.min.js"></script>
 	<link href="static/bootstrap-3.1.1-dist/css/bootstrap-glyphicons.css" rel="stylesheet">
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 	<link href='http://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
-
+<link href='https://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="static/stylesheets/mediaDiary.css"> </style>
-	
+
      
 </head>
 
 <body>
-  <div id = "title">Media Diary Sketchbook:<br/> From CSV to sortable by column hatch marks</div>
-<div id = "buttons"></div>
+  <div id = "title">Media Diary Sketchbook:<br/></div>
+<div id = "buttons">Views:<br/><br/></div>
+<div id = "key"></div>
+
 <div id = "chart"></div>
-<div id = "notes"></div>
+<div id = "notes">click views to organize</div>
 
 <script type="text/javascript" charset="utf-8">
-  var data = "data.csv"	
+  var data = "data_durationFormat.csv"	
   var keyColumn = "productivity"
-  var colorScale = d3.scale.linear().domain([0,5]).range(["black","green"])
+  var colorKeyColumn = "media"
+var interval = 5
+var colors = ["#B2872B",
+"#D06B1C",
+"#D5AB73",
+"#ECAB23",
+"#936734",
+"#E08F48"]
+  var colorScale = d3.scale.ordinal().domain(["sound","web","paper","images","image_sound","person"]).range(colors)
   var slantScale = d3.scale.linear().domain([0,5]).range([5,0])
   var initialViewColumn = "day"
+var headers = ["day","media","productivity","company","partOfDay","timeOfDay","place","duration","description"]
 </script>
-	
 <script src="diary.js"></script>
+<script>
+//function sheetLoaded(spreadsheetdata) {
+//  // var dataframe = mapEntries(data,row_length,skip);
+//var spreadsheetData_formatted = mapEntries(spreadsheetdata,null,0);
+////console.log(spreadsheetData_formatted)
+//var headers = d3.keys(spreadsheetData_formatted[0])
+//}
+</script>
+<script src="https://spreadsheets.google.com/feeds/cells/1xbGjLjbxhHtG17iGn1Ek_msA2AxqB3FkihJHcjZVY4c/odeogl7/public/values?alt=json-in-script&callback=sheetLoaded"></script>
 	
 </body>
 </html>
