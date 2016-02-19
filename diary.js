@@ -8,7 +8,7 @@ function sheetLoaded(spreadsheetdata) {
     drawKey()
     var svg = d3.select("#chart").append("svg").attr("width",1200).attr("height",800)
     var groupedData = intoArray(groupSpreadsheet(spreadsheetData,initialViewColumn))
-    drawLine(groupedData,svg,initialViewColumn)
+    drawNest(groupedData,svg,initialViewColumn)
     
     for(var k in headers){
        if(headers[k]!="duration"&& headers[k]!="timeOfDay"){
@@ -124,7 +124,7 @@ function getRandomInt(min, max) {
 function update(data,column,svg){
     d3.selectAll("#chart text").remove()
     drawLine(data,svg,column)  
-    d3.selectAll(".line").transition().delay(function(d,i){return i*5})
+    d3.selectAll(".line").transition().delay(function(d,i){return i*2})
     .duration(100)
     .attr("x1",function(d,i){
         return lineOffset*d[1][1]+leftMargin + getRandomInt(0, slantScale(d[0][keyColumn])*2)
@@ -250,7 +250,7 @@ function drawNest(data,svg,column){
       return 200+randomCoords[i][1]*randomCoords[i][4]+randomCoords[i][2]*randomCoords[i][4]
   })
   .attr("stroke",function(d){
-      var colorIndex = d[colorKeyColumn]
+      var colorIndex = d[0][colorKeyColumn]
       return colorScale(colorIndex)
   })
  svg.selectAll(".line") .on("mouseover",function(d){
