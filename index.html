@@ -32,20 +32,25 @@
 <div id = "notes">click views to organize</div>
 
 <script type="text/javascript" charset="utf-8">
-  var data = "data_durationFormat.csv"	
-  var keyColumn = "productivity"
-  var colorKeyColumn = "media"
-var interval = 5
-var colors = ["#B2872B",
-"#D06B1C",
-"#D5AB73",
-"#ECAB23",
-"#936734",
-"#E08F48"]
+
+//things to adjust TODO: still working on autoimporting values
+  var interval = 5//the number that you divide by, in my case each 5 minutes is a hatch mark, if less than 5, then defaults to 1
+  var leftMargin = 160//leave room for labels of each row
+  var lineHeight = 20//height of marks
+  var lineGap = 30//height of rows
+  var lineOffset = 2//spacing between marks
+
+  var colors = ["#B2872B","#D06B1C","#D5AB73","#ECAB23","#936734","#E08F48"]//colors for the ordinal scale
   var colorScale = d3.scale.ordinal().domain(["sound","web","paper","images","image_sound","person"]).range(colors)
-  var slantScale = d3.scale.linear().domain([0,5]).range([5,0])
-  var initialViewColumn = "day"
-var headers = ["day","media","productivity","company","partOfDay","timeOfDay","place","duration","description"]
+
+//set up columns to use for each calculation
+  var keyColumn = "productivity"//the messiness of the hatches use values in this column
+  var initialViewColumn = "media"// the column it is initally ordered by
+  var colorKeyColumn = "media"//the colors use values in this column
+
+  var keyRange = [0,5]// the smallest and largest values found in the key column
+  var slantScale = d3.scale.linear().domain([keyRange[0],keyRange[1]]).range([keyRange[1],keyRange[0]])//so higher the value, smaller the slant
+
 </script>
 <script src="diary.js"></script>
 <script>
