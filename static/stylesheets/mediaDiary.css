@@ -7,7 +7,7 @@ html, body{
 #title{
     padding:30px;
     font-size:20px;
-    letter-spacing:4px;
+    letter-spacing:1px;
 }
 #chart{
     position:relative;

@@ -255,7 +255,7 @@ function drawNest(data,svg,column){
   })
  svg.selectAll(".line") .on("mouseover",function(d){
       d3.select(this).attr("stroke-width","6px")
-      d3.select("#notes").html("Description:<br/>"+d.description)
+      d3.select("#notes").html("Description:<br/>"+d[0].description)
   })
   .on("mouseout",function(d){
       d3.select(this).attr("stroke-width","1px")
