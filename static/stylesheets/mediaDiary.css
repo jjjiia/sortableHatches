@@ -1,0 +1,54 @@
+html, body{
+
+    font-family:"EB+Garamond"; font-weight: lighter;
+    font-color:#222;
+}
+
+#title{
+    padding:30px;
+    font-size:20px;
+    letter-spacing:4px;
+}
+#chart{
+    position:relative;
+    float:top;
+    padding:20px;
+    position:absolute;
+    top:400px;
+    left:0px;
+}
+#buttons{
+    position:absolute;
+    top:70px;
+    left:300px;
+    padding:10px;
+    margin:0px;
+    font-size:16px;
+    width:100px;
+}
+#notes{
+    position:absolute;
+    top:360px;
+    left:40px; 
+}
+.axis path {
+
+    fill: none;
+    stroke: #000;
+}
+
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+#key{
+    padding:6px;
+    margin:10px;
+    width:220px;
+    height:220px;
+    position:absolute;
+    top:70px;
+    left:30px;
+    border:1px dotted black;
+}
